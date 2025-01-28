@@ -1,0 +1,29 @@
+# ------------ #
+# Install java #
+# ------------ #
+
+# Set environment variables for SDKMAN
+ENV SDKMAN_DIR=/home/dockeruser/.sdkman
+ENV PATH=$SDKMAN_DIR/bin:$PATH
+
+# Install java (required for nextflow)
+# Adapted from Taken from: https://www.nextflow.io/docs/latest/install.html
+RUN cd /software                       && \
+  curl -s https://get.sdkman.io | bash
+
+RUN bash -c "source $SDKMAN_DIR/bin/sdkman-init.sh && sdk install java 17.0.10-tem && java -version"
+
+ENV PATH=$SDKMAN_DIR/candidates/java/current/bin:$PATH
+
+
+# ---------------- #
+# Install nextflow #
+# --------------- #
+RUN cd /software                         && \
+  curl -s https://get.nextflow.io | bash && \
+  chmod +x nextflow                      && \
+  mkdir -p $HOME/.local/bin/             && \
+  mv nextflow $HOME/.local/bin/          && \
+  nextflow info
+
+ENV PATH=/home/dockeruser/.local/bin:$PATH
