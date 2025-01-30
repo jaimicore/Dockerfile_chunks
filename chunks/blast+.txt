@@ -1,0 +1,27 @@
+# ----------------------------- #
+# Install required dependencies #
+# ----------------------------- #
+
+# Install dependency necessary to download dependencies in next step
+RUN apt-get update && apt-get install -y \
+  git                                    \
+  wget                                   
+
+# ------------------ #
+# Set BLAST+ version #
+# ------------------ #
+
+# See https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ to update the version if needed
+ENV BLAST_VERSION="2.14.1"
+ENV BLAST_NAME="ncbi-blast-${BLAST_VERSION}+"
+
+
+# --------------------------- #
+# Download and install BLAST+ #
+# --------------------------- #
+
+# Download dependencies from URIs early in Dockerfile to facilitate layer caching
+RUN mkdir -p /tmp/build/download && \
+  cd /tmp/build/download && \
+  wget --no-check-certificate https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/${BLAST_VERSION}/${BLAST_NAME}-x64-linux.tar.gz
+
